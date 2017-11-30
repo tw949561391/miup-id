@@ -1,0 +1,43 @@
+const log = require('../core/log').getLogger("init");
+const port = require('../conf').server.port;
+const server = require('../server');
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
+
+function release() {
+    if (cluster.isMaster) {
+        log.info(`----------------------------CPU数量为${numCPUs}----------------------------`);
+        log.info(`----------------------------主进程 ${process.pid} 正在运行中----------------------------`);
+        for (let i = 0; i < numCPUs; i++) {
+            cluster.fork();
+        }
+        cluster.on('exit', (worker, code, signal) => {
+            log.info(`----------------------------进程 ${worker.process.pid} 关闭----------------------------`);
+        });
+    } else {
+        server.listen(port, function onListening() {
+            let addr = server.address();
+            let bind = typeof addr === 'string' ? addr : addr.port;
+            log.info(`----------------------------服务器已启动：----------------------------`);
+            log.info(`----------------------------端口号：${bind}----------------------------`);
+            log.info(`----------------------------进程ID：${process.pid}----------------------------`);
+        });
+    }
+}
+
+function dev() {
+    server.listen(port, function onListening() {
+        let addr = server.address();
+        let bind = typeof addr === 'string' ? addr : addr.port;
+        log.info(`----------------------------服务器已启动：----------------------------`);
+        log.info(`----------------------------端口号：${bind}----------------------------`);
+        log.info(`----------------------------进程ID：${process.pid}----------------------------`);
+    });
+}
+
+if('prod'===process.env.NODE_ENV){
+    release()
+}else {
+    dev()
+}

@@ -1,0 +1,40 @@
+{
+  "name": "miup-id",
+  "version": "1.0.0",
+  "description": "miup-id",
+  "main": "bin/www",
+  "scripts": {
+    "start": "npm run drop-log && npm run mkdir && npm run uninstall && npm run install && npm run server && npm run watch &&npm run success",
+    "stop": "forever stop ./bin/www",
+    "restart": "npm stop && npm start",
+    "drop-log": "rm -rf  /var/log/node/miup-id",
+    "mkdir": "mkdir -p /var/log/node/miup-id",
+    "uninstall": "rm -rf node_modules",
+    "install": "npm i",
+    "server": "export NODE_ENV=prod&& forever start -a  -l /var/log/node/miup-id/forever.log  -e /var/log/node/miup-id/err.log ./bin/www",
+    "watch": "cat /var/log/node/miup-id/forever.log",
+    "success": "echo \"success\"",
+    "upload": "scp -r ./ root@miup.cc:/web/miup-id"
+  },
+  "keywords": [],
+  "author": "Tristan201314",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "generic-pool": "^3.2.0",
+    "kcors": "*",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "*",
+    "koa-logger": "^3.1.0",
+    "koa-multer": "^1.0.2",
+    "koa-oauth-server": "*",
+    "koa-router": "^7.3.0",
+    "log4js": "^2.3.12",
+    "miup-errors": "^1.0.3",
+    "miup-handlers": "^1.0.5",
+    "miup-utils": "^1.0.0",
+    "mongodb": "^2.2.33",
+    "redis": "*",
+    "socket.io-client": "^2.0.4"
+  }
+}

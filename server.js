@@ -28,5 +28,4 @@ app.use(require('./route/pub/profile.route').routes());
 app.use(() => {
     throw new Notfound("resource not found");
 });
-
 module.exports = server;

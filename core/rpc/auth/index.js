@@ -51,9 +51,8 @@ function buildResponse(response) {
 
 function validateUserMd(...scopes) {
     return async (ctx, next) => {
-        let res = await validateUser(ctx, scopes || []);
-        ctx.user = res;
-        next();
+        ctx.user = await validateUser(ctx, scopes || []);
+        await next();
     }
 }
 
